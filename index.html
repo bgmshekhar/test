@@ -65,7 +65,7 @@
             const password = document.getElementById("password").value;
 
             try {
-                const res = await fetch("https://api.yourdomain.com/login", {
+                const res = await fetch("https://portal.csydev.online/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password })
