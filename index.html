@@ -59,26 +59,38 @@
         <p id="message"></p>
     </div>
 
-    <script>
-        async function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+<script>
+    async function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const message = document.getElementById("message");
 
-            try {
-                const res = await fetch("https://portal.csydev.online/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username, password })
-                });
+        try {
+            const res = await fetch("https://portal.csydev.online/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
 
-                const data = await res.json();
-                document.getElementById("message").innerText = data.message;
-                document.getElementById("message").style.color = res.ok ? "green" : "red";
-            } catch (err) {
-                document.getElementById("message").innerText = "Error connecting to backend";
-                document.getElementById("message").style.color = "red";
+            if (!res.ok) {
+                // backend returned 4xx/5xx
+                const errData = await res.json();
+                message.innerText = errData.message || "Login failed";
+                message.style.color = "red";
+                return;
             }
+
+            const data = await res.json();
+            message.innerText = data.message || "Login success";
+            message.style.color = "green";
+
+        } catch (err) {
+            console.error("Fetch error:", err);
+            message.innerText = "❌ Error connecting to backend";
+            message.style.color = "red";
         }
-    </script>
+    }
+ </script>
+
 </body>
 </html>
